@@ -28,7 +28,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             Form {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text("When do you want to wake up?")
                         .font(.headline)
                     
@@ -36,23 +36,36 @@ struct ContentView: View {
                         .labelsHidden()
                 }
                 
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text("Desired amount of sleep")
                         .font(.headline)
                     
                     Stepper("\(sleepAmount.formatted())", value: $sleepAmount, in: 4...12, step: 0.25)
                 }
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Daily coffee intale")
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Daily coffee intake")
                         .font(.headline)
                     
-                    Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 1...20)
+                    Picker(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", selection: $coffeeAmount) {
+                        ForEach(1...20, id: \.self) { amount in
+                            Text("\(amount)")
+                        }
+                    }
                 }
             }
             .navigationTitle("BetterRest")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.secondary)
+            .onAppear { // ADD THESE
+              UITableView.appearance().backgroundColor = .clear
+            }
+            .onDisappear {
+              UITableView.appearance().backgroundColor = .systemGroupedBackground
+            }
             .toolbar {
                 Button("Calculate", action: calculateBedTime)
+                    .font(.title3)
             }
             .alert(alertTitle, isPresented:  $showingAlert) {
                 Button("OK") {}
